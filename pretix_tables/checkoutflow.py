@@ -21,7 +21,7 @@ class NumberedSpacesStep(CartMixin, TemplateFlowStep):
     products that need a seat, so this step sits right after it and follows the same category
     settings ("cross-selling category", "normal + cross-selling category" and their conditions).
     """
-    priority = 45
+    priority = 41
     identifier = STEP_IDENTIFIER
     template_name = "pretix_tables/checkout_step.html"
     label = pgettext_lazy("checkoutflow", "Reserve spaces")
