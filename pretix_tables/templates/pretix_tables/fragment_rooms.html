@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load rich_text %}
+{% load thumb %}
 <div class="numbered-filter">
     <label for="numbered-need">{% trans "Show tables with at least" %}</label>
     <select id="numbered-need" class="form-control input-sm" data-numbered-need>
@@ -12,39 +13,61 @@
     </select>
 </div>
 {% for r in rooms %}
-    <details class="numbered-room" data-numbered-room="{{ r.room.pk }}"{% if rooms|length == 1 %} open{% endif %}>
-        <summary class="numbered-room-head">
-            <span class="numbered-room-name">
-                <strong>{{ r.item.name }}</strong>
-                <span class="numbered-meta">
-                    {% blocktrans trimmed count n=r.tables %}
-                        {{ n }} table
-                    {% plural %}
-                        {{ n }} tables
-                    {% endblocktrans %}
-                    {% if r.room.pairs %}· {% trans "sold in pairs" %}{% endif %}
-                    <span data-numbered-shown></span>
-                    ·
-                    <span data-numbered-room-free class="{% if r.free %}text-success{% else %}text-danger{% endif %}">
-                        {% if r.free %}
-                            {% blocktrans trimmed with free=r.free total=r.size %}
-                                {{ free }} of {{ total }} spaces free
-                            {% endblocktrans %}
-                        {% else %}
-                            {% trans "Sold out" %}
-                        {% endif %}
-                    </span>
-                </span>
-            </span>
-            <span class="numbered-room-price price">
+    <article class="item-with-variations numbered-room" data-numbered-room="{{ r.room.pk }}"
+            aria-labelledby="numbered-room-{{ r.room.pk }}-legend">
+        <div class="row product-row headline">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                {% if r.item.picture %}
+                    <a href="{{ r.item.picture.url }}" class="productpicture"
+                       data-title="{{ r.item.name|force_escape|force_escape }}"
+                            {# Yes, double-escape to prevent XSS in lightbox #}
+                       data-lightbox="{{ r.item.id }}"
+                       aria-label="{% blocktrans trimmed with item=r.item.name %}Show full-size image of {{ item }}{% endblocktrans %}">
+                        <img src="{{ r.item.picture|thumb:'60x60^' }}" alt="{{ r.item.name }}"/>
+                    </a>
+                {% endif %}
+                <div class="product-description {% if r.item.picture %}with-picture{% endif %}">
+                    <h4 class="h4" id="numbered-room-{{ r.room.pk }}-legend">{{ r.item.name }}</h4>
+                    {% if r.item.description %}
+                        <div class="product-description">{{ r.item.description|localize|rich_text }}</div>
+                    {% endif %}
+                    <p class="numbered-meta">
+                        {% blocktrans trimmed count n=r.tables %}
+                            {{ n }} table
+                        {% plural %}
+                            {{ n }} tables
+                        {% endblocktrans %}
+                        {% if r.room.pairs %}· {% trans "sold in pairs" %}{% endif %}
+                        <span data-numbered-shown></span>
+                        ·
+                        <span data-numbered-room-free class="{% if r.free %}text-success{% else %}text-danger{% endif %}">
+                            {% if r.free %}
+                                {% blocktrans trimmed with free=r.free total=r.size %}
+                                    {{ free }} of {{ total }} spaces free
+                                {% endblocktrans %}
+                            {% else %}
+                                {% trans "Sold out" %}
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-3 col-xs-6 price">
                 {{ r.price }}
                 <small class="text-muted">{% trans "per space" %}</small>
-            </span>
-        </summary>
-        <div class="numbered-room-body">
-            {% if r.item.description %}
-                <div class="product-description">{{ r.item.description|localize|rich_text }}</div>
-            {% endif %}
+            </div>
+            <div class="col-md-2 col-sm-3 col-xs-6 availability-box">
+                <button type="button" class="btn btn-default btn-block" data-numbered-toggle
+                        data-label-alt="{% trans "Hide tables" %}"
+                        aria-expanded="false" aria-controls="numbered-room-{{ r.room.pk }}-tables"
+                        aria-describedby="numbered-room-{{ r.room.pk }}-legend">
+                    <i class="fa fa-angle-down collapse-indicator" aria-hidden="true"></i>
+                    <span>{% trans "Show tables" %}</span>
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="numbered-room-body" id="numbered-room-{{ r.room.pk }}-tables" hidden>
             <div class="numbered-room-cols">
                 {% if r.room.map %}
                     <a class="numbered-map" href="{{ r.room.map.url }}" target="_blank" rel="noopener"
@@ -58,6 +81,6 @@
                 </div>
             </div>
         </div>
-    </details>
+    </article>
 {% endfor %}
 <div class="numbered-summary" data-numbered-summary aria-live="polite" hidden></div>

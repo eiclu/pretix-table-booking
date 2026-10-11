@@ -1,14 +1,8 @@
-.numbered-spaces .numbered-meta { font-size: 13px; font-weight: normal; display: block; }
+.numbered-spaces .numbered-meta { font-size: 13px; }
 .numbered-spaces .numbered-submit { margin-top: 15px; }
 .numbered-spaces .numbered-hint { margin-top: 10px; text-align: right; }
 
-.numbered-room { border-top: 1px solid #e5e5e5; }
-.numbered-room-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 12px 4px; cursor: pointer; list-style: none; }
-.numbered-room-head:hover { background: rgba(0, 0, 0, .03); }
-.numbered-room-name { flex: 1; min-width: 0; }
-.numbered-room-price { text-align: right; white-space: nowrap; }
-.numbered-room-price small { display: block; }
-.numbered-room-body { padding: 4px 4px 18px; }
+.numbered-room-body { padding: 4px 0 18px; }
 .numbered-room-cols { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
 .numbered-map { flex: 0 0 260px; max-width: 100%; }
 .numbered-map img { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
@@ -55,7 +49,3 @@
 .numbered-legend i.is-held { border-style: dashed; border-color: #b58900; background: #fdf6e3; }
 .numbered-legend i.is-sold { background: #e6e6e6; border-color: #e6e6e6; }
 .numbered-sum { font-weight: bold; }
-
-.numbered-room-head::-webkit-details-marker { display: none; }
-.numbered-room-head::before { content: "\25B8"; width: 14px; color: #777; }
-.numbered-room[open] > .numbered-room-head::before { content: "\25BE"; }

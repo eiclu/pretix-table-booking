@@ -223,6 +223,23 @@
             refresh();
         });
 
+        function toggleRoom(btn, open) {
+            var body = document.getElementById(btn.getAttribute('aria-controls'));
+            if (body.hidden !== open) return;
+            body.hidden = !open;
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            var label = btn.querySelector('span');
+            var alt = btn.dataset.labelAlt;
+            btn.dataset.labelAlt = label.textContent;
+            label.textContent = alt;
+        }
+        root.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-numbered-toggle]');
+            if (btn) toggleRoom(btn, btn.getAttribute('aria-expanded') !== 'true');
+        });
+        var toggles = root.querySelectorAll('[data-numbered-toggle]');
+        if (toggles.length === 1) toggleRoom(toggles[0], true);
+
         root.addEventListener('change', function (e) {
             if (!e.target.matches('[data-numbered-need]')) return;
             need = parseInt(e.target.value, 10) || 0;

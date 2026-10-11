@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pretix-tables 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 17:05+0000\n"
-"PO-Revision-Date: 2026-10-11 17:05+0000\n"
+"POT-Creation-Date: 2026-10-11 17:10+0000\n"
+"PO-Revision-Date: 2026-10-11 17:10+0000\n"
 "Last-Translator: Luca Eichler\n"
 "Language: de_Informal\n"
 "Language-Team: German (Informal)\n"
@@ -253,7 +253,7 @@ msgid "Sold"
 msgstr "Verkauft"
 
 #: pretix_tables/templates/pretix_tables/control_overview.html:38
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:25
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:40
 msgid "sold in pairs"
 msgstr "paarweise verkauft"
 
@@ -374,55 +374,68 @@ msgstr "Abbrechen"
 msgid "Use this selection"
 msgstr "Auswahl übernehmen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:5
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:6
 msgid "Show tables with at least"
 msgstr "Tische anzeigen mit mindestens"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:7
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:8
 msgid "any number of free spaces"
 msgstr "beliebig vielen freien Plätzen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:8
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:9
 msgid "2 free spaces"
 msgstr "2 freien Plätzen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:9
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:10
 msgid "4 free spaces"
 msgstr "4 freien Plätzen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:10
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:11
 msgid "6 free spaces"
 msgstr "6 freien Plätzen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:11
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:12
 msgid "8 free spaces"
 msgstr "8 freien Plätzen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:20
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:25
+#, python-format
+msgid "Show full-size image of %(item)s"
+msgstr "Bild von %(item)s in voller Größe anzeigen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:35
 #, python-format
 msgid "%(n)s table"
 msgid_plural "%(n)s tables"
 msgstr[0] "%(n)s Tisch"
 msgstr[1] "%(n)s Tische"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:30
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:45
 #, python-format
 msgid "%(free)s of %(total)s spaces free"
 msgstr "%(free)s von %(total)s Plätzen frei"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:34 pretix_tables/views.py:95
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:49 pretix_tables/views.py:95
 msgid "Sold out"
 msgstr "Ausverkauft"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:41
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:57
 msgid "per space"
 msgstr "pro Platz"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:51
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:61
+msgid "Hide tables"
+msgstr "Tische ausblenden"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:65
+msgid "Show tables"
+msgstr "Tische zeigen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:74
 msgid "Open the room map in full size"
 msgstr "Raumplan in voller Größe öffnen"
 
-#: pretix_tables/templates/pretix_tables/fragment_rooms.html:53
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:76
 #, python-format
 msgid "Room map of %(room)s"
 msgstr "Raumplan von %(room)s"

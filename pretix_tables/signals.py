@@ -3,6 +3,7 @@ from django.templatetags.static import static
 from django.urls import Resolver404, resolve, reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from pathlib import Path
 from pretix.base.models import CartPosition
 from pretix.base.services.cart import CartError
 from pretix.base.services.orders import OrderError
@@ -53,6 +54,11 @@ def control_nav_event(sender, request, **kwargs):
     }]
 
 
+def _asset(name):
+    """Static URL that changes with the file, so browsers do not keep an outdated copy after an update."""
+    return f"{static(name)}?v={int((Path(__file__).parent / 'static' / name).stat().st_mtime)}"
+
+
 @receiver(html_head, dispatch_uid="pretix_tables_html_head")
 def presale_html_head(sender, request, **kwargs):
     try:
@@ -64,7 +70,7 @@ def presale_html_head(sender, request, **kwargs):
         return ""
     return format_html(
         '<link rel="stylesheet" href="{}"><script src="{}" defer></script>',
-        static("pretix_tables/numbered.css"), static("pretix_tables/numbered.js"),
+        _asset("pretix_tables/numbered.css"), _asset("pretix_tables/numbered.js"),
     )
 
 
