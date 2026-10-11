@@ -1,0 +1,589 @@
+# German translation of pretix-tables (informal).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pretix-tables 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 17:05+0000\n"
+"PO-Revision-Date: 2026-10-11 17:05+0000\n"
+"Last-Translator: Luca Eichler\n"
+"Language: de_Informal\n"
+"Language-Team: German (Informal)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: pretix_tables/apps.py:13
+msgid "Numbered spaces"
+msgstr "Nummerierte Plätze"
+
+#: pretix_tables/apps.py:16
+msgid "Sell products and variations as numbered spaces, e.g. seats at a table. Buyers pick their spaces in a popup."
+msgstr ""
+"Produkte und Varianten als nummerierte Plätze verkaufen, z. B. Sitzplätze an einem Tisch. Käufer*innen "
+"wählen ihre Plätze in einem Popup aus."
+
+#: pretix_tables/checkoutflow.py:27
+msgctxt "checkoutflow"
+msgid "Reserve spaces"
+msgstr "Plätze reservieren"
+
+#: pretix_tables/checkoutflow.py:93
+msgid "We were not able to process your request completely as the server was too busy. Please try again."
+msgstr ""
+"Wir konnten deine Anfrage nicht vollständig bearbeiten, da der Server zu beschäftigt war. Bitte versuche es"
+" erneut."
+
+#: pretix_tables/exporters.py:10
+msgid "Table reservations"
+msgstr "Tischreservierungen"
+
+#: pretix_tables/exporters.py:11
+msgctxt "export_category"
+msgid "Order data"
+msgstr "Bestelldaten"
+
+#: pretix_tables/exporters.py:12
+msgid "Download a list with one row per reserved space: room, table, space, order and name."
+msgstr "Liste mit einer Zeile pro reserviertem Platz herunterladen: Raum, Tisch, Platz, Bestellung und Name."
+
+#: pretix_tables/exporters.py:19 pretix_tables/templates/pretix_tables/control_overview.html:24
+msgid "Room"
+msgstr "Raum"
+
+#: pretix_tables/exporters.py:19
+msgid "Table"
+msgstr "Tisch"
+
+#: pretix_tables/exporters.py:19
+msgid "Space"
+msgstr "Platz"
+
+#: pretix_tables/exporters.py:19
+msgid "Order code"
+msgstr "Bestellnummer"
+
+#: pretix_tables/exporters.py:19
+msgid "Position"
+msgstr "Position"
+
+#: pretix_tables/exporters.py:19
+msgid "Status"
+msgstr "Status"
+
+#: pretix_tables/exporters.py:20
+msgid "Attendee name"
+msgstr "Name Teilnehmer*in"
+
+#: pretix_tables/exporters.py:20
+msgid "Invoice name"
+msgstr "Name auf der Rechnung"
+
+#: pretix_tables/exporters.py:20
+msgid "Email"
+msgstr "E-Mail"
+
+#: pretix_tables/forms.py:11
+msgid "Room with numbered tables"
+msgstr "Raum mit nummerierten Tischen"
+
+#: pretix_tables/forms.py:14
+msgid "Sell this product as a room with numbered tables"
+msgstr "Dieses Produkt als Raum mit nummerierten Tischen verkaufen"
+
+#: pretix_tables/forms.py:15
+msgid ""
+"The product's price is the price per space. Buyers pick a table and then their spaces in a popup. The "
+"plugin creates and maintains a quota with the matching size."
+msgstr ""
+"Der Preis des Produkts ist der Preis pro Platz. Käufer*innen wählen einen Tisch und anschließend ihre "
+"Plätze in einem Popup. Das Plugin erstellt und pflegt ein Kontingent in der passenden Größe."
+
+#: pretix_tables/forms.py:20
+msgid "Sell in pairs only"
+msgstr "Nur paarweise verkaufen"
+
+#: pretix_tables/forms.py:21
+msgid ""
+"Spaces 1+2, 3+4, 5+6, … of a table can only be bought together, so no single space is left between two "
+"bookings. Requires an even number of spaces at every table."
+msgstr ""
+"Die Plätze 1+2, 3+4, 5+6, … eines Tisches können nur gemeinsam gekauft werden, damit zwischen zwei "
+"Buchungen kein einzelner Platz frei bleibt. Erfordert eine gerade Anzahl an Plätzen an jedem Tisch."
+
+#: pretix_tables/forms.py:26
+msgid "Room map"
+msgstr "Raumplan"
+
+#: pretix_tables/forms.py:27
+msgid "Shown next to the list of tables in the shop."
+msgstr "Wird im Shop neben der Liste der Tische angezeigt."
+
+#: pretix_tables/forms.py:30
+msgid "Number of tables"
+msgstr "Anzahl der Tische"
+
+#: pretix_tables/forms.py:31
+msgid "Spaces per table"
+msgstr "Plätze pro Tisch"
+
+#: pretix_tables/forms.py:47
+#, python-brace-format
+msgid "This room has {tables} tables with {spaces} spaces."
+msgstr "Dieser Raum hat {tables} Tische mit insgesamt {spaces} Plätzen."
+
+#: pretix_tables/forms.py:52 pretix_tables/templates/pretix_tables/control_overview.html:47
+msgid "Manage tables"
+msgstr "Tische verwalten"
+
+#: pretix_tables/forms.py:55
+msgid "Created as “Table 1”, “Table 2”, … You can rename, add and remove tables afterwards."
+msgstr ""
+"Werden als „Tisch 1“, „Tisch 2“, … angelegt. Du kannst Tische anschließend umbenennen, hinzufügen und "
+"entfernen."
+
+#: pretix_tables/forms.py:60
+msgid "Rooms with numbered tables are not available for event series."
+msgstr "Räume mit nummerierten Tischen sind für Veranstaltungsreihen nicht verfügbar."
+
+#: pretix_tables/forms.py:62
+msgid "Rooms with numbered tables can not be combined with a seating plan."
+msgstr "Räume mit nummerierten Tischen können nicht mit einem Sitzplan kombiniert werden."
+
+#: pretix_tables/forms.py:64
+msgid "Rooms with numbered tables can not have variations. Use one product per room."
+msgstr "Räume mit nummerierten Tischen können keine Varianten haben. Verwende ein Produkt pro Raum."
+
+#: pretix_tables/forms.py:78
+#, python-brace-format
+msgid "These tables have an odd number of spaces: {tables}"
+msgstr "Diese Tische haben eine ungerade Anzahl an Plätzen: {tables}"
+
+#: pretix_tables/forms.py:83
+msgid "This field is required."
+msgstr "Dieses Feld ist erforderlich."
+
+#: pretix_tables/forms.py:85 pretix_tables/views.py:222
+msgid "Pairs need an even number of spaces."
+msgstr "Für den paarweisen Verkauf ist eine gerade Anzahl an Plätzen nötig."
+
+#: pretix_tables/forms.py:100 pretix_tables/views.py:227
+#, python-brace-format
+msgid "Table {number}"
+msgstr "Tisch {number}"
+
+#: pretix_tables/services.py:72
+#, python-brace-format
+msgid "{name} (numbered spaces)"
+msgstr "{name} (nummerierte Plätze)"
+
+#: pretix_tables/services.py:184
+#, python-brace-format
+msgid ""
+"{room}, {table}: spaces are only sold in pairs. Please add space {missing} as well or remove space {number}"
+" from your cart."
+msgstr ""
+"{room}, {table}: Plätze werden nur paarweise verkauft. Bitte füge auch Platz {missing} hinzu oder entferne "
+"Platz {number} aus deinem Warenkorb."
+
+#: pretix_tables/signals.py:49 pretix_tables/templates/pretix_tables/control_overview.html:3
+#: pretix_tables/templates/pretix_tables/control_overview.html:5
+msgid "Rooms and tables"
+msgstr "Räume und Tische"
+
+#: pretix_tables/templates/pretix_tables/checkout_step.html:5
+msgid ""
+"You can also reserve spaces at a table with your order. This is optional: choose your spaces or just "
+"continue."
+msgstr ""
+"Du kannst mit deiner Bestellung auch Plätze an einem Tisch reservieren. Das ist optional: Wähle deine "
+"Plätze oder fahre einfach fort."
+
+#: pretix_tables/templates/pretix_tables/checkout_step.html:17
+msgid "Go back"
+msgstr "Zurück"
+
+#: pretix_tables/templates/pretix_tables/checkout_step.html:22
+msgid "Continue"
+msgstr "Weiter"
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:7
+msgid ""
+"A room is a product that is sold as numbered spaces at tables. Its price is the price per space. To add a "
+"room, open a product without variations and enable “Room with numbered tables”."
+msgstr ""
+"Ein Raum ist ein Produkt, das als nummerierte Plätze an Tischen verkauft wird. Sein Preis ist der Preis pro"
+" Platz. Um einen Raum hinzuzufügen, öffne ein Produkt ohne Varianten und aktiviere „Raum mit nummerierten "
+"Tischen“."
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:13
+msgid "A list of all reservations is available under Orders → Export → “Table reservations”."
+msgstr "Eine Liste aller Reservierungen findest du unter Bestellungen → Export → „Tischreservierungen“."
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:18
+msgid "No product is set up as a room yet."
+msgstr "Es ist noch kein Produkt als Raum eingerichtet."
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:25
+#: pretix_tables/templates/pretix_tables/control_tables.html:3
+msgid "Tables"
+msgstr "Tische"
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:26
+#: pretix_tables/templates/pretix_tables/control_tables.html:46
+#: pretix_tables/templates/pretix_tables/control_tables.html:57
+msgid "Spaces"
+msgstr "Plätze"
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:27
+#: pretix_tables/templates/pretix_tables/control_tables.html:48
+#: pretix_tables/templates/pretix_tables/control_tables.html:68
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:10
+msgid "Free"
+msgstr "Frei"
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:28
+msgid "In carts"
+msgstr "In Warenkörben"
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:29
+msgid "Sold"
+msgstr "Verkauft"
+
+#: pretix_tables/templates/pretix_tables/control_overview.html:38
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:25
+msgid "sold in pairs"
+msgstr "paarweise verkauft"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:6
+#, python-format
+msgid "Tables in %(room)s"
+msgstr "Tische in %(room)s"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:9
+msgid "All rooms"
+msgstr "Alle Räume"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:11
+msgid "Room settings (price, pairs, map)"
+msgstr "Raumeinstellungen (Preis, Paare, Plan)"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:14
+#, python-format
+msgid "%(tables)s tables, %(size)s spaces: %(free)s free, %(held)s in carts, %(sold)s sold."
+msgstr "%(tables)s Tische, %(size)s Plätze: %(free)s frei, %(held)s in Warenkörben, %(sold)s verkauft."
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:17
+#, python-format
+msgid "%(n)s more are not for sale."
+msgstr "%(n)s weitere sind nicht im Verkauf."
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:18
+msgid "Spaces are sold in pairs."
+msgstr "Plätze werden paarweise verkauft."
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:21
+msgid ""
+"Use “Not for sale” for spaces that do not exist at a table or that you give out yourself, for example “3-4,"
+" 9”. They keep their number, are shown as not available in the shop and do not count towards the quota. You"
+" can still assign them to an order by hand in the backend."
+msgstr ""
+"Verwende „Nicht im Verkauf“ für Plätze, die es an einem Tisch nicht gibt oder die du selbst vergibst, zum "
+"Beispiel „3-4, 9“. Diese Plätze behalten ihre Nummer, werden im Shop als nicht verfügbar angezeigt und "
+"zählen nicht zum Kontingent. Im Backend kannst du sie weiterhin von Hand einer Bestellung zuweisen."
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:31
+msgid "Add"
+msgstr "Hinzufügen:"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:33
+msgid "tables with"
+msgstr "Tische mit je"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:35
+msgid "spaces each"
+msgstr "Plätzen"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:36
+msgid "Add tables"
+msgstr "Tische hinzufügen"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:45
+#: pretix_tables/templates/pretix_tables/control_tables.html:56
+msgid "Table name"
+msgstr "Tischname"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:47
+#: pretix_tables/templates/pretix_tables/control_tables.html:58
+#: pretix_tables/templates/pretix_tables/control_tables.html:66
+msgid "Not for sale"
+msgstr "Nicht im Verkauf"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:49
+msgid "Occupancy"
+msgstr "Belegung"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:58
+msgid "e.g. 3-4, 9"
+msgstr "z. B. 3-4, 9"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:70
+msgid "In a cart or reserved by a voucher"
+msgstr "In einem Warenkorb oder durch einen Gutschein reserviert"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:76
+msgid "This table has reservations."
+msgstr "Dieser Tisch hat Reservierungen."
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:77
+#, python-format
+msgid "Delete %(table)s"
+msgstr "%(table)s löschen"
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:83
+msgid "This room has no tables yet."
+msgstr "Dieser Raum hat noch keine Tische."
+
+#: pretix_tables/templates/pretix_tables/control_tables.html:90
+msgid "Save"
+msgstr "Speichern"
+
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:11
+msgid "Selected"
+msgstr "Ausgewählt"
+
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:12
+msgid "In your cart"
+msgstr "In deinem Warenkorb"
+
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:13
+msgid "Reserved"
+msgstr "Reserviert"
+
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:14
+msgid "Sold or not available"
+msgstr "Verkauft oder nicht verfügbar"
+
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:18
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: pretix_tables/templates/pretix_tables/fragment_dialog.html:19
+msgid "Use this selection"
+msgstr "Auswahl übernehmen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:5
+msgid "Show tables with at least"
+msgstr "Tische anzeigen mit mindestens"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:7
+msgid "any number of free spaces"
+msgstr "beliebig vielen freien Plätzen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:8
+msgid "2 free spaces"
+msgstr "2 freien Plätzen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:9
+msgid "4 free spaces"
+msgstr "4 freien Plätzen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:10
+msgid "6 free spaces"
+msgstr "6 freien Plätzen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:11
+msgid "8 free spaces"
+msgstr "8 freien Plätzen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:20
+#, python-format
+msgid "%(n)s table"
+msgid_plural "%(n)s tables"
+msgstr[0] "%(n)s Tisch"
+msgstr[1] "%(n)s Tische"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:30
+#, python-format
+msgid "%(free)s of %(total)s spaces free"
+msgstr "%(free)s von %(total)s Plätzen frei"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:34 pretix_tables/views.py:95
+msgid "Sold out"
+msgstr "Ausverkauft"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:41
+msgid "per space"
+msgstr "pro Platz"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:51
+msgid "Open the room map in full size"
+msgstr "Raumplan in voller Größe öffnen"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:53
+#, python-format
+msgid "Room map of %(room)s"
+msgstr "Raumplan von %(room)s"
+
+#: pretix_tables/templates/pretix_tables/shop.html:5
+msgid "We're now trying to reserve this for you!"
+msgstr "Wir versuchen nun, die ausgewählten Produkte für dich zu reservieren!"
+
+#: pretix_tables/templates/pretix_tables/shop.html:12
+msgid "Add to cart"
+msgstr "Zum Warenkorb hinzufügen"
+
+#: pretix_tables/templates/pretix_tables/shop.html:17
+msgid "Your selected spaces are added together with the other products when you press “Add to cart” below."
+msgstr ""
+"Deine ausgewählten Plätze werden zusammen mit den anderen Produkten hinzugefügt, wenn du unten auf „Zum "
+"Warenkorb hinzufügen“ klickst."
+
+#: pretix_tables/views.py:93
+#, python-format
+msgid "%f of %t free"
+msgstr "%f von %t frei"
+
+#: pretix_tables/views.py:94
+#, python-format
+msgid "%f of %t spaces free"
+msgstr "%f von %t Plätzen frei"
+
+#: pretix_tables/views.py:96
+#, python-format
+msgid "Selected: %s"
+msgstr "Ausgewählt: %s"
+
+#: pretix_tables/views.py:97
+#, python-format
+msgid "In cart: %s"
+msgstr "Im Warenkorb: %s"
+
+#: pretix_tables/views.py:98
+msgid "%a of %b tables match"
+msgstr "%a von %b Tischen passen"
+
+#: pretix_tables/views.py:99
+msgid "No table in this room has that many free spaces."
+msgstr "Kein Tisch in diesem Raum hat so viele freie Plätze."
+
+#: pretix_tables/views.py:100
+#, python-format
+msgid "%r, %t: spaces %s"
+msgstr "%r, %t: Plätze %s"
+
+#: pretix_tables/views.py:101
+#, python-format
+msgid "Choose your spaces. %s per space."
+msgstr "Wähle deine Plätze. %s pro Platz."
+
+#: pretix_tables/views.py:102
+#, python-format
+msgid "Choose your spaces. %s per space. Spaces are sold in pairs."
+msgstr "Wähle deine Plätze. %s pro Platz. Plätze werden paarweise verkauft."
+
+#: pretix_tables/views.py:103
+msgid "No space selected"
+msgstr "Kein Platz ausgewählt"
+
+#: pretix_tables/views.py:104
+msgid "1 space selected"
+msgstr "1 Platz ausgewählt"
+
+#: pretix_tables/views.py:105
+#, python-format
+msgid "%d spaces selected"
+msgstr "%d Plätze ausgewählt"
+
+#: pretix_tables/views.py:106
+#, python-format
+msgid "Space %s was just taken by someone else and has been removed from your selection."
+msgstr "Platz %s wurde soeben von jemand anderem belegt und aus deiner Auswahl entfernt."
+
+#: pretix_tables/views.py:107
+#, python-format
+msgid "Space %s"
+msgstr "Platz %s"
+
+#: pretix_tables/views.py:108
+msgid "Clear selection"
+msgstr "Auswahl aufheben"
+
+#: pretix_tables/views.py:110
+msgid "free"
+msgstr "frei"
+
+#: pretix_tables/views.py:110
+msgid "selected"
+msgstr "ausgewählt"
+
+#: pretix_tables/views.py:110
+msgid "in cart"
+msgstr "im Warenkorb"
+
+#: pretix_tables/views.py:110
+msgid "reserved"
+msgstr "reserviert"
+
+#: pretix_tables/views.py:110
+msgid "sold"
+msgstr "verkauft"
+
+#: pretix_tables/views.py:111
+msgid "not available"
+msgstr "nicht verfügbar"
+
+#: pretix_tables/views.py:212
+#, python-brace-format
+msgid "{table} has reservations and can not be deleted."
+msgstr "{table} hat Reservierungen und kann nicht gelöscht werden."
+
+#: pretix_tables/views.py:215
+#, python-brace-format
+msgid "{table} has been deleted."
+msgstr "{table} wurde gelöscht."
+
+#: pretix_tables/views.py:220
+msgid "Please enter a number of tables (1–200) and spaces per table (1–100)."
+msgstr "Bitte gib eine Anzahl an Tischen (1–200) und Plätzen pro Tisch (1–100) ein."
+
+#: pretix_tables/views.py:231
+#, python-brace-format
+msgid "{count} tables have been added."
+msgstr "{count} Tische wurden hinzugefügt."
+
+#: pretix_tables/views.py:239
+#, python-brace-format
+msgid "{table}: please enter a name and a number of spaces between 1 and 100."
+msgstr "{table}: Bitte gib einen Namen und eine Anzahl an Plätzen zwischen 1 und 100 ein."
+
+#: pretix_tables/views.py:242
+#, python-brace-format
+msgid "{table}: pairs need an even number of spaces."
+msgstr "{table}: Für den paarweisen Verkauf ist eine gerade Anzahl an Plätzen nötig."
+
+#: pretix_tables/views.py:244
+#, python-brace-format
+msgid "{table}: space {number} is already sold or reserved, so you can not go below {number} spaces."
+msgstr ""
+"{table}: Platz {number} ist bereits verkauft oder reserviert, daher sind mindestens {number} Plätze "
+"erforderlich."
+
+#: pretix_tables/views.py:252
+#, python-brace-format
+msgid "{table}: “not for sale” must list space numbers between 1 and {size}, for example “3-4, 9”."
+msgstr "{table}: „Nicht im Verkauf“ muss Platznummern zwischen 1 und {size} enthalten, zum Beispiel „3-4, 9“."
+
+#: pretix_tables/views.py:255
+#, python-brace-format
+msgid "{table}: this room is sold in pairs, so only whole pairs (1-2, 3-4, …) can be taken out of sale."
+msgstr ""
+"{table}: Dieser Raum wird paarweise verkauft, daher können nur ganze Paare (1-2, 3-4, …) aus dem Verkauf "
+"genommen werden."
+
+#: pretix_tables/views.py:265
+msgid "Your changes have been saved."
+msgstr "Deine Änderungen wurden gespeichert."
+

@@ -1,2 +1,3 @@
 recursive-include pretix_tables/static *
 recursive-include pretix_tables/templates *
+recursive-include pretix_tables/locale *
