@@ -77,7 +77,8 @@
                 var size = table.s.length - numbersIn(table, 'x').length;  // spaces that are for sale at all
                 roomFree += free;
                 roomSize += size;
-                if (free < need && !sel.length) return;
+                // sold out tables are left out, unless the buyer has seats there
+                if ((free < need || (!free && !mine.length)) && !sel.length) return;
                 shown++;
                 var card = el('button', 'numbered-table' + (sel.length ? ' has-selection' : ''));
                 card.type = 'button';
