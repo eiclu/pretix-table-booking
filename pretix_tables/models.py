@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from i18nfield.fields import I18nCharField
 
 GUID_PREFIX = "numbered"
 
@@ -52,14 +53,19 @@ def room_map_upload_to(instance, filename: str) -> str:
 
 class NumberedRoom(models.Model):
     """
-    A product whose stock is a set of tables with numbered spaces. The product's price is the
-    price per space.
+    A product whose stock is a set of tables with numbered seats. The product's price is the
+    price per seat.
     """
     item = models.OneToOneField("pretixbase.Item", on_delete=models.CASCADE, related_name="numbered_room")
     pairs = models.BooleanField(default=False)
     quota = models.ForeignKey("pretixbase.Quota", on_delete=models.SET_NULL, null=True, blank=True,
                               related_name="+")
     map = models.FileField(upload_to=room_map_upload_to, null=True, blank=True, max_length=255)
+    # Words for a seat and a table in this room, empty means the event's wording
+    term_space = I18nCharField(max_length=100, null=True, blank=True)
+    term_spaces = I18nCharField(max_length=100, null=True, blank=True)
+    term_table = I18nCharField(max_length=100, null=True, blank=True)
+    term_tables = I18nCharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return str(self.item)
@@ -72,14 +78,14 @@ class NumberedRoom(models.Model):
 
 class NumberedTable(models.Model):
     """
-    One table in a room. Its spaces are pretix ``Seat`` objects, so pretix takes care of never
-    selling a space twice.
+    One table in a room. Its seats are pretix ``Seat`` objects, so pretix takes care of never
+    selling a seat twice.
     """
     room = models.ForeignKey(NumberedRoom, on_delete=models.CASCADE, related_name="tables")
     name = models.CharField(max_length=190)
     size = models.PositiveIntegerField()
     position = models.IntegerField(default=0)
-    # Space numbers that exist on the table but are not sold here, e.g. "3,4,9"
+    # Seat numbers that exist on the table but are not sold here, e.g. "3,4,9"
     blocked = models.CharField(max_length=500, blank=True, default="")
 
     class Meta:
@@ -98,7 +104,7 @@ class NumberedTable(models.Model):
 
     @property
     def for_sale(self):
-        """Number of spaces that are sold through the shop."""
+        """Number of seats that are sold through the shop."""
         return self.size - len(self.blocked_numbers)
 
     def guid(self, number):
@@ -108,7 +114,7 @@ class NumberedTable(models.Model):
         return number + 1 if number % 2 else number - 1
 
     def groups(self):
-        """Spaces that can only be bought together: fixed pairs or single spaces."""
+        """Seats that can only be bought together: fixed pairs or single seats."""
         if not self.room.pairs:
             return [[n] for n in range(1, self.size + 1)]
         return [[n, n + 1] for n in range(1, self.size + 1, 2)]

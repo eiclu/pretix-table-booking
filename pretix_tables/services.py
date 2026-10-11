@@ -14,6 +14,7 @@ from pretix.base.models import (
 )
 
 from .models import GUID_PREFIX, NumberedTable, parse_guid
+from .terms import get_terms
 
 LAYOUT_CATEGORY = "pretix_tables"
 
@@ -69,7 +70,7 @@ def sync_room(room):
     Seat.objects.bulk_create(create)
     _delete_or_block(existing.values())
 
-    name = _("{name} (numbered spaces)").format(name=str(item))[:200]
+    name = _("{name} (numbered seats)").format(name=str(item))[:200]
     quota = room.quota
     if quota is None:
         quota = Quota.objects.create(event=event, name=name, size=total)
@@ -104,8 +105,8 @@ def remove_room(room):
 
 def space_states(event, cart_id=None):
     """
-    Returns ``{table_id: {number: state}}`` for every space of the event, using a fixed number of
-    queries. A space is taken by a pending or paid order, an unexpired cart or a valid voucher.
+    Returns ``{table_id: {number: state}}`` for every seat of the event, using a fixed number of
+    queries. A seat is taken by a pending or paid order, an unexpired cart or a valid voucher.
     """
     sold = set(OrderPosition.objects.filter(
         order__event=event, seat__isnull=False, order__status__in=[Order.STATUS_PENDING, Order.STATUS_PAID],
@@ -140,13 +141,13 @@ def space_states(event, cart_id=None):
 
 
 def table_states(table, states):
-    """List of states for spaces 1..size of a table. Spaces without a seat count as not for sale."""
+    """List of states for seats 1..size of a table. Seats without a seat count as not for sale."""
     mine = states.get(table.pk, {})
     return [mine.get(n, BLOCKED) for n in range(1, table.size + 1)]
 
 
 def count_free(table, states):
-    """Number of spaces that can still be bought, respecting pairs."""
+    """Number of seats that can still be bought, respecting pairs."""
     st = table_states(table, states)
     return sum(len(g) for g in table.groups() if all(st[n - 1] == FREE for n in g))
 
@@ -156,7 +157,7 @@ def highest_taken(table, states):
 
 
 def reservations(event):
-    """Order positions of pending and paid orders that hold one of our spaces, with their table and number."""
+    """Order positions of pending and paid orders that hold one of our seats, with their table and number."""
     positions = OrderPosition.objects.filter(
         order__event=event, seat__seat_guid__startswith=GUID_PREFIX + "-",
         order__status__in=[Order.STATUS_PENDING, Order.STATUS_PAID],
@@ -170,7 +171,7 @@ def reservations(event):
 
 def check_positions(positions, exc_class):
     """
-    Validates cart positions that carry one of our spaces: pairs must be complete. That the space
+    Validates cart positions that carry one of our seats: pairs must be complete. That the seat
     belongs to the product and is still free is checked by pretix itself.
     """
     present = {parse_guid(pos.seat.seat_guid) for pos in positions if pos.seat_id} - {None}
@@ -181,7 +182,8 @@ def check_positions(positions, exc_class):
         table = tables.get(table_id)
         if table and table.room.pairs and (table_id, table.partner(number)) not in present:
             raise exc_class(
-                _("{room}, {table}: spaces are only sold in pairs. Please add space {missing} as well or "
-                  "remove space {number} from your cart.").format(
-                    room=str(table.room), table=table.name, missing=table.partner(number), number=number)
+                _("{room_name}, {table_name}: {spaces} are only sold in pairs. Please add {space} {missing} as "
+                  "well or remove {space} {number} from your cart.").format(
+                    room_name=str(table.room), table_name=table.name, missing=table.partner(number),
+                    number=number, **get_terms(table.room.item.event, table.room))
             )

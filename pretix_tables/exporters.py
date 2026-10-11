@@ -9,14 +9,14 @@ class TableReservationsExporter(ListExporter):
     identifier = "numbered_table_reservations"
     verbose_name = _("Table reservations")
     category = pgettext_lazy("export_category", "Order data")
-    description = _("Download a list with one row per reserved space: room, table, space, order and name.")
+    description = _("Download a list with one row per reserved seat: room, table, seat, order and name.")
 
     def get_filename(self):
         return f"{self.event.slug}_table_reservations"
 
     def iterate_list(self, form_data):
         yield [
-            _("Room"), _("Table"), _("Space"), _("Order code"), _("Position"), _("Status"),
+            _("Room"), _("Table"), _("Seat"), _("Order code"), _("Position"), _("Status"),
             _("Attendee name"), _("Invoice name"), _("Email"),
         ]
         rows = reservations(self.event)

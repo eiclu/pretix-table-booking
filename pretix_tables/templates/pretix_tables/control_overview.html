@@ -4,8 +4,13 @@
 {% block content %}
     <h1>{% trans "Rooms and tables" %}</h1>
     <p>
+        <a class="btn btn-default" href="{% url "plugins:pretix_tables:wording" organizer=request.organizer.slug event=request.event.slug %}">
+            <span class="fa fa-font" aria-hidden="true"></span> {% trans "Wording in the shop" %}
+        </a>
+    </p>
+    <p>
         {% blocktrans trimmed %}
-            A room is a product that is sold as numbered spaces at tables. Its price is the price per space.
+            A room is a product that is sold as numbered seats at tables. Its price is the price per seat.
             To add a room, open a product without variations and enable “Room with numbered tables”.
         {% endblocktrans %}
     </p>
@@ -23,7 +28,7 @@
                 <tr>
                     <th>{% trans "Room" %}</th>
                     <th class="text-right">{% trans "Tables" %}</th>
-                    <th class="text-right">{% trans "Spaces" %}</th>
+                    <th class="text-right">{% trans "Seats" %}</th>
                     <th class="text-right">{% trans "Free" %}</th>
                     <th class="text-right">{% trans "In carts" %}</th>
                     <th class="text-right">{% trans "Sold" %}</th>

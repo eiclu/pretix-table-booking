@@ -2,9 +2,42 @@ from django import forms
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from i18nfield.forms import I18nFormField, I18nTextarea, I18nTextInput
+from pretix.base.forms import SettingsForm
 
 from .models import NumberedRoom, NumberedTable
 from .services import remove_room, sync_room
+from .terms import TERMS, get_terms
+
+TERM_LABELS = {
+    "space": _("Word for a seat"),
+    "spaces": _("Word for several seats"),
+    "table": _("Word for a table"),
+    "tables": _("Word for several tables"),
+}
+
+
+def term_field(key, help_text):
+    return I18nFormField(label=TERM_LABELS[key], help_text=help_text, widget=I18nTextInput, required=False,
+                         max_length=100)
+
+
+class WordingSettingsForm(SettingsForm):
+    tables_step_label = I18nFormField(
+        label=_("Name of the checkout step"),
+        help_text=_("Shown in the progress bar of the checkout. Default: “Reserve seats”."),
+        widget=I18nTextInput, required=False, max_length=100,
+    )
+    tables_step_text = I18nFormField(
+        label=_("Introduction of the checkout step"),
+        help_text=_("Shown above the list of rooms. Default: “You can also reserve seats with your order. This is "
+                    "optional: make your selection or just continue.”"),
+        widget=I18nTextarea, required=False, widget_kwargs={"attrs": {"rows": 3}},
+    )
+    tables_term_space = term_field("space", _("For example “place”. Default: “seat”."))
+    tables_term_spaces = term_field("spaces", _("For example “places”. Default: “seats”."))
+    tables_term_table = term_field("table", _("For example “box”. Default: “table”."))
+    tables_term_tables = term_field("tables", _("For example “boxes”. Default: “tables”."))
 
 
 class NumberedRoomForm(forms.Form):
@@ -12,14 +45,14 @@ class NumberedRoomForm(forms.Form):
 
     enabled = forms.BooleanField(
         label=_("Sell this product as a room with numbered tables"),
-        help_text=_("The product's price is the price per space. Buyers pick a table and then their spaces in "
+        help_text=_("The product's price is the price per seat. Buyers pick a table and then their seats in "
                     "a popup. The plugin creates and maintains a quota with the matching size."),
         required=False,
     )
     pairs = forms.BooleanField(
         label=_("Sell in pairs only"),
-        help_text=_("Spaces 1+2, 3+4, 5+6, … of a table can only be bought together, so no single space is left "
-                    "between two bookings. Requires an even number of spaces at every table."),
+        help_text=_("Seats 1+2, 3+4, 5+6, … of a table can only be bought together, so no single seat is left "
+                    "between two bookings. Requires an even number of seats at every table."),
         required=False,
     )
     map = forms.ImageField(
@@ -28,7 +61,11 @@ class NumberedRoomForm(forms.Form):
         required=False,
     )
     tables = forms.IntegerField(label=_("Number of tables"), min_value=1, max_value=200, required=False)
-    spaces = forms.IntegerField(label=_("Spaces per table"), min_value=1, max_value=100, required=False)
+    spaces = forms.IntegerField(label=_("Seats per table"), min_value=1, max_value=100, required=False)
+    term_space = term_field("space", _("Only for this room. Leave empty to use the wording of the event."))
+    term_spaces = term_field("spaces", "")
+    term_table = term_field("table", "")
+    term_tables = term_field("tables", "")
 
     def __init__(self, *args, item, **kwargs):
         self.item = item
@@ -37,6 +74,11 @@ class NumberedRoomForm(forms.Form):
         event = item.event
 
         self.fields["enabled"].initial = bool(self.room)
+        for key in TERMS:
+            field = self.fields[f"term_{key}"]
+            field.widget.enabled_locales = event.settings.locales
+            if self.room:
+                field.initial = getattr(self.room, f"term_{key}")
         if self.room:
             self.fields["pairs"].initial = self.room.pairs
             self.fields["map"].initial = self.room.map or None
@@ -44,7 +86,7 @@ class NumberedRoomForm(forms.Form):
             tables = list(self.room.tables.all())
             self.fields["enabled"].help_text = format_html(
                 '{} <a href="{}">{}</a>',
-                _("This room has {tables} tables with {spaces} spaces.").format(
+                _("This room has {tables} tables with {spaces} seats.").format(
                     tables=len(tables), spaces=sum(t.size for t in tables)),
                 reverse("plugins:pretix_tables:tables", kwargs={
                     "organizer": event.organizer.slug, "event": event.slug, "item": item.pk,
@@ -75,14 +117,14 @@ class NumberedRoomForm(forms.Form):
             if data.get("pairs"):
                 odd = [t.name for t in self.room.tables.all() if t.size % 2]
                 if odd:
-                    self.add_error("pairs", _("These tables have an odd number of spaces: {tables}").format(
+                    self.add_error("pairs", _("These tables have an odd number of seats: {tables}").format(
                         tables=", ".join(odd)))
         else:
             for name in ("tables", "spaces"):
                 if not data.get(name) and name not in self.errors:
                     self.add_error(name, _("This field is required."))
             if data.get("pairs") and data.get("spaces") and data["spaces"] % 2:
-                self.add_error("spaces", _("Pairs need an even number of spaces."))
+                self.add_error("spaces", _("Pairs need an even number of seats."))
         return data
 
     def save(self):
@@ -95,13 +137,17 @@ class NumberedRoomForm(forms.Form):
             return
         room = self.room
         if room is None:
-            room = NumberedRoom.objects.create(item=self.item, pairs=bool(data.get("pairs")))
+            room = NumberedRoom(item=self.item)
+        for key in TERMS:
+            setattr(room, f"term_{key}", data.get(f"term_{key}"))
+        room.pairs = bool(data.get("pairs"))
+        if room.pk is None:
+            room.save()
+            table = get_terms(self.item.event, room)["Table"]
             NumberedTable.objects.bulk_create([
-                NumberedTable(room=room, name=str(_("Table {number}").format(number=n)), size=data["spaces"],
-                              position=n)
+                NumberedTable(room=room, name=f"{table} {n}", size=data["spaces"], position=n)
                 for n in range(1, data["tables"] + 1)
             ])
-        room.pairs = bool(data.get("pairs"))
         if data.get("map") is False:
             if room.map:
                 room.map.delete(save=False)

@@ -3,13 +3,13 @@
 {% load rich_text %}
 {% load thumb %}
 <div class="numbered-filter">
-    <label for="numbered-need">{% trans "Show tables with at least" %}</label>
+    <label for="numbered-need">{{ filter_label }}</label>
     <select id="numbered-need" class="form-control input-sm" data-numbered-need>
-        <option value="0">{% trans "any number of free spaces" %}</option>
-        <option value="2">{% trans "2 free spaces" %}</option>
-        <option value="4">{% trans "4 free spaces" %}</option>
-        <option value="6">{% trans "6 free spaces" %}</option>
-        <option value="8">{% trans "8 free spaces" %}</option>
+        <option value="0">{% trans "any" context "minimum" %}</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
     </select>
 </div>
 {% for r in rooms %}
@@ -32,37 +32,27 @@
                         <div class="product-description">{{ r.item.description|localize|rich_text }}</div>
                     {% endif %}
                     <p class="numbered-meta">
-                        {% blocktrans trimmed count n=r.tables %}
-                            {{ n }} table
-                        {% plural %}
-                            {{ n }} tables
-                        {% endblocktrans %}
+                        {{ r.tables }} {{ r.tables_term }}
                         {% if r.room.pairs %}· {% trans "sold in pairs" %}{% endif %}
                         <span data-numbered-shown></span>
                         ·
                         <span data-numbered-room-free class="{% if r.free %}text-success{% else %}text-danger{% endif %}">
-                            {% if r.free %}
-                                {% blocktrans trimmed with free=r.free total=r.size %}
-                                    {{ free }} of {{ total }} spaces free
-                                {% endblocktrans %}
-                            {% else %}
-                                {% trans "Sold out" %}
-                            {% endif %}
+                            {% if r.free %}{{ r.free_text }}{% else %}{% trans "Sold out" %}{% endif %}
                         </span>
                     </p>
                 </div>
             </div>
             <div class="col-md-2 col-sm-3 col-xs-6 price">
                 {{ r.price }}
-                <small class="text-muted">{% trans "per space" %}</small>
+                <small class="text-muted">{{ r.per_space }}</small>
             </div>
             <div class="col-md-2 col-sm-3 col-xs-6 availability-box">
                 <button type="button" class="btn btn-default btn-block" data-numbered-toggle
-                        data-label-alt="{% trans "Hide tables" %}"
+                        data-label-alt="{{ r.hide }}"
                         aria-expanded="false" aria-controls="numbered-room-{{ r.room.pk }}-tables"
                         aria-describedby="numbered-room-{{ r.room.pk }}-legend">
                     <i class="fa fa-angle-down collapse-indicator" aria-hidden="true"></i>
-                    <span>{% trans "Show tables" %}</span>
+                    <span>{{ r.show }}</span>
                 </button>
             </div>
             <div class="clearfix"></div>

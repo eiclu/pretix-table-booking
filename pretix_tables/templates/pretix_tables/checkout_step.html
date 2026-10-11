@@ -1,9 +1,7 @@
 {% extends "pretixpresale/event/checkout_base.html" %}
 {% load i18n %}
 {% block inner %}
-    <p>
-        {% trans "You can also reserve spaces at a table with your order. This is optional: choose your spaces or just continue." %}
-    </p>
+    <p>{{ intro|linebreaksbr }}</p>
     <form method="post" id="numbered-spaces-form">
         {% csrf_token %}
         <div class="panel panel-default cross-selling">

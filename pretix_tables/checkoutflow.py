@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.utils.translation import gettext as _, pgettext_lazy
+from django.utils.translation import gettext as _
 from pretix.base.services.cart import CartError, CartManager
 from pretix.base.services.cross_selling import CrossSellingService
 from pretix.base.services.locking import LockTimeoutException
@@ -10,6 +10,7 @@ from pretix.presale.views import CartMixin, get_cart
 from pretix.presale.views.cart import get_or_create_cart_id
 
 from .models import NumberedRoom, parse_guid
+from .terms import step_label, step_text
 from .views import _memberships, build_block
 
 STEP_IDENTIFIER = "numbered-spaces"
@@ -24,8 +25,11 @@ class NumberedSpacesStep(CartMixin, TemplateFlowStep):
     priority = 41
     identifier = STEP_IDENTIFIER
     template_name = "pretix_tables/checkout_step.html"
-    label = pgettext_lazy("checkoutflow", "Reserve spaces")
     icon = "th"
+
+    @property
+    def label(self):
+        return step_label(self.event)
 
     def _item_ids(self, request):
         """IDs of numbered products that the cross-selling settings offer for the current cart."""
@@ -62,7 +66,7 @@ class NumberedSpacesStep(CartMixin, TemplateFlowStep):
         if not block:
             return redirect(self.get_prev_url(request) if request.GET.get("dir") == "prev"
                             else self.get_next_url(request))
-        return self.render(cart=self.get_cart(), **block)
+        return self.render(cart=self.get_cart(), intro=step_text(self.event), **block)
 
     def post(self, request):
         self.request = request

@@ -7,14 +7,14 @@ from . import __version__
 class PluginApp(PluginConfig):
     default = True
     name = "pretix_tables"
-    verbose_name = "Numbered spaces"
+    verbose_name = "Numbered seats"
 
     class PretixPluginMeta:
-        name = gettext_lazy("Numbered spaces")
+        name = gettext_lazy("Numbered seats")
         author = "Luca Eichler"
         description = gettext_lazy(
-            "Sell products and variations as numbered spaces, e.g. seats at a table. "
-            "Buyers pick their spaces in a popup."
+            "Sell products and variations as numbered seats, e.g. at a table. "
+            "Buyers pick their seats in a popup."
         )
         visible = True
         version = __version__

@@ -10,10 +10,12 @@ from django.views.generic import TemplateView
 from pretix.base.models import Quota
 from pretix.base.templatetags.money import money_filter
 from pretix.control.permissions import EventPermissionRequiredMixin
+from pretix.control.views.event import EventSettingsFormView
 from pretix.multidomain.urlreverse import eventreverse
 from pretix.presale.productlist import prepare_item_list_for_shop
 from pretix.presale.views.cart import get_or_create_cart_id
 
+from .forms import WordingSettingsForm
 from .models import NumberedRoom, NumberedTable, parse_numbers
 from .services import (
     BLOCKED,
@@ -29,12 +31,13 @@ from .services import (
     sync_room,
     table_states,
 )
+from .terms import get_terms
 
 STATE_CHARS = {FREE: "f", MINE: "m", HELD: "h", SOLD: "s", BLOCKED: "x"}
 
 
 def _compact(table, states):
-    """One character per space, e.g. ``ffssffhh``. Keeps the page small for rooms with many tables."""
+    """One character per seat, e.g. ``ffssffhh``. Keeps the page small for rooms with many tables."""
     return "".join(STATE_CHARS[s] for s in table_states(table, states))
 
 
@@ -71,40 +74,58 @@ def build_block(event, request, items):
                 "id": table.pk, "name": table.name,
                 "s": compact if on_sale else compact.replace("f", "s"),
             })
+        terms = get_terms(event, room)
+        size = sum(t.for_sale for t in tables)
+        free = sum(count_free(t, states) for t in tables) if on_sale else 0
+        room_free = _("{free} of {total} {spaces} free")
+        choose = _("Choose your {spaces}. {price} per {space}.")
+        if room.pairs:
+            choose += " " + _("{Spaces} are sold in pairs.")
         rooms.append({
             "room": room,
             "item": item,
             "price": price,
             "tables": len(tables),
-            "size": sum(t.for_sale for t in tables),
-            "free": sum(count_free(t, states) for t in tables) if on_sale else 0,
+            "tables_term": terms["table"] if len(tables) == 1 else terms["tables"],
+            "free": free,
+            "free_text": room_free.format(free=free, total=size, **terms),
+            "per_space": _("per {space}").format(**terms),
+            "show": _("Show {tables}").format(**terms),
+            "hide": _("Hide {tables}").format(**terms),
         })
         config_rooms[str(room.pk)] = {
             "name": str(item.name), "field": room.field_name, "pairs": room.pairs, "price": price,
             "tables": config_tables,
+            # texts that use the room's own words for a seat and a table
+            "t": {
+                "roomFree": room_free.format(free="%f", total="%t", **terms),
+                "noTables": _("No matching {tables}.").format(**terms),
+                "summaryLine": _("{room_name}, {table_name}: {spaces} {numbers}").format(
+                    room_name="%r", table_name="%t", numbers="%s", **terms),
+                "sub": choose.format(price=price, **terms),
+                "countOne": _("1 {space} selected").format(**terms),
+                "countMany": _("{count} {spaces} selected").format(count="%d", **terms),
+                "gone": _("{Space} {numbers} was just taken by someone else and has been removed from your "
+                          "selection.").format(numbers="%s", **terms),
+                "space": _("{Space} {number}").format(number="%s", **terms),
+            },
         }
     if not rooms:
         return None
+    terms = get_terms(event)
 
     config = {
         "statusUrl": eventreverse(event, "plugins:pretix_tables:status"),
         "rooms": config_rooms,
         "strings": {
             "tableFree": _("%f of %t free"),
-            "roomFree": _("%f of %t spaces free"),
             "soldOut": _("Sold out"),
             "selected": _("Selected: %s"),
             "inCart": _("In cart: %s"),
-            "shown": _("%a of %b tables match"),
-            "noTables": _("No table in this room has that many free spaces."),
-            "summaryLine": _("%r, %t: spaces %s"),
-            "sub": _("Choose your spaces. %s per space."),
-            "subPairs": _("Choose your spaces. %s per space. Spaces are sold in pairs."),
-            "none": _("No space selected"),
-            "countOne": _("1 space selected"),
-            "countMany": _("%d spaces selected"),
-            "gone": _("Space %s was just taken by someone else and has been removed from your selection."),
-            "space": _("Space %s"),
+            "shown": _("%a of %b shown"),
+            "none": _("Nothing selected"),
+            "countOne": _("1 {space} selected").format(**terms),
+            "countMany": _("{count} {spaces} selected").format(count="%d", **terms),
             "clear": _("Clear selection"),
             "states": {
                 "f": _("free"), "sel": _("selected"), "m": _("in cart"), "h": _("reserved"), "s": _("sold"),
@@ -112,7 +133,10 @@ def build_block(event, request, items):
             },
         },
     }
-    return {"event": event, "rooms": rooms, "config": config}
+    return {
+        "event": event, "rooms": rooms, "config": config,
+        "filter_label": _("Minimum free {spaces} per {table}").format(**terms),
+    }
 
 
 def render_shop_block(event, request):
@@ -161,6 +185,17 @@ class OverviewView(EventPermissionRequiredMixin, TemplateView):
             "tables").order_by(F("item__category__position").asc(nulls_first=True), "item__category", "item__position")
         ctx["rooms"] = [_room_stats(room, list(room.tables.all()), states) for room in rooms]
         return ctx
+
+
+class WordingView(EventSettingsFormView):
+    template_name = "pretix_tables/control_wording.html"
+    form_class = WordingSettingsForm
+    permission = "event.items:write"
+
+    def get_success_url(self):
+        return reverse("plugins:pretix_tables:wording", kwargs={
+            "organizer": self.request.organizer.slug, "event": self.request.event.slug,
+        })
 
 
 class TablesView(EventPermissionRequiredMixin, TemplateView):
@@ -217,15 +252,15 @@ class TablesView(EventPermissionRequiredMixin, TemplateView):
             count = self._int(request.POST.get("count"), 1, 200)
             size = self._int(request.POST.get("size"), 1, 100)
             if not count or not size:
-                errors.append(_("Please enter a number of tables (1–200) and spaces per table (1–100)."))
+                errors.append(_("Please enter a number of tables (1–200) and seats per table (1–100)."))
             elif room.pairs and size % 2:
-                errors.append(_("Pairs need an even number of spaces."))
+                errors.append(_("Pairs need an even number of seats."))
             else:
                 start = len(tables)
                 position = max((t.position for t in tables), default=0)
+                word = get_terms(request.event, room)["Table"]
                 NumberedTable.objects.bulk_create([
-                    NumberedTable(room=room, name=_("Table {number}").format(number=start + k), size=size,
-                                  position=position + k)
+                    NumberedTable(room=room, name=f"{word} {start + k}", size=size, position=position + k)
                     for k in range(1, count + 1)
                 ])
                 messages.success(request, _("{count} tables have been added.").format(count=count))
@@ -236,20 +271,20 @@ class TablesView(EventPermissionRequiredMixin, TemplateView):
                 size = self._int(request.POST.get(f"size_{table.pk}"), 1, 100)
                 taken = highest_taken(table, states)
                 if not name or not size:
-                    errors.append(_("{table}: please enter a name and a number of spaces between 1 and 100.").format(
+                    errors.append(_("{table}: please enter a name and a number of seats between 1 and 100.").format(
                         table=table.name))
                 elif room.pairs and size % 2:
-                    errors.append(_("{table}: pairs need an even number of spaces.").format(table=table.name))
+                    errors.append(_("{table}: pairs need an even number of seats.").format(table=table.name))
                 elif size < taken:
-                    errors.append(_("{table}: space {number} is already sold or reserved, so you can not go below "
-                                    "{number} spaces.").format(table=table.name, number=taken))
+                    errors.append(_("{table}: seat {number} is already sold or reserved, so you can not go below "
+                                    "{number} seats.").format(table=table.name, number=taken))
                 else:
                     try:
                         blocked = parse_numbers(request.POST.get(f"blocked_{table.pk}") or "")
                     except ValueError:
                         blocked = None
                     if blocked is None or any(n > size for n in blocked):
-                        errors.append(_("{table}: “not for sale” must list space numbers between 1 and {size}, "
+                        errors.append(_("{table}: “not for sale” must list seat numbers between 1 and {size}, "
                                         "for example “3-4, 9”.").format(table=table.name, size=size))
                     elif room.pairs and any(table.partner(n) not in blocked for n in blocked):
                         errors.append(_("{table}: this room is sold in pairs, so only whole pairs (1-2, 3-4, …) "

@@ -1,4 +1,4 @@
-/* Table and space picker for the pretix "Numbered spaces" plugin. */
+/* Table and seat picker for the pretix "Numbered seats" plugin. */
 (function () {
     'use strict';
 
@@ -90,11 +90,11 @@
                 if (mine.length) card.appendChild(el('span', '', t.inCart.replace('%s', mine.join(', '))));
                 list.appendChild(card);
             });
-            if (!shown) list.appendChild(el('p', 'text-muted', t.noTables));
+            if (!shown) list.appendChild(el('p', 'text-muted', room.t.noTables));
             box.querySelector('[data-numbered-shown]').textContent =
                 need ? '· ' + t.shown.replace('%a', shown).replace('%b', room.tables.length) : '';
             var pill = box.querySelector('[data-numbered-room-free]');
-            pill.textContent = roomFree ? t.roomFree.replace('%f', roomFree).replace('%t', roomSize) : t.soldOut;
+            pill.textContent = roomFree ? room.t.roomFree.replace('%f', roomFree).replace('%t', roomSize) : t.soldOut;
             pill.className = roomFree ? 'text-success' : 'text-danger';
         }
         function renderRooms() { Object.keys(cfg.rooms).forEach(renderRoom); }
@@ -115,7 +115,7 @@
                     total++;
                 });
                 var line = el('div', 'numbered-summary-line');
-                line.appendChild(el('span', '', t.summaryLine.replace('%r', entry.room.name)
+                line.appendChild(el('span', '', entry.room.t.summaryLine.replace('%r', entry.room.name)
                     .replace('%t', entry.table.name).replace('%s', selection[id].join(', '))));
                 line.appendChild(el('span', 'numbered-summary-price', selection[id].length + ' × ' + entry.room.price));
                 var clear = el('button', 'btn btn-link btn-xs', '×');
@@ -154,7 +154,7 @@
                 btn.type = 'button';
                 btn.disabled = state !== 'sel' && state !== 'f';
                 btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-                btn.setAttribute('aria-label', t.space.replace('%s', group.join(' + ')) + ', ' + t.states[state]);
+                btn.setAttribute('aria-label', room.t.space.replace('%s', group.join(' + ')) + ', ' + t.states[state]);
                 btn.dataset.numbers = group.join(',');
                 btn.appendChild(el('b', '', group.join(' + ')));
                 btn.appendChild(el('span', '', t.states[state]));
@@ -162,7 +162,7 @@
             });
             var count = working.length;
             dialog.querySelector('[data-numbered-sum]').textContent = !count ? t.none
-                : (count === 1 ? t.countOne : t.countMany.replace('%d', count)) + ' · ' + count + ' × ' + room.price;
+                : (count === 1 ? room.t.countOne : room.t.countMany.replace('%d', count)) + ' · ' + count + ' × ' + room.price;
         }
 
         // Drops selected spaces that are no longer free, always as whole groups.
@@ -191,7 +191,7 @@
                         var gone = prune(current.room, current.table, working);
                         if (gone.length) {
                             working = working.filter(function (n) { return gone.indexOf(n) === -1; });
-                            alertBox.textContent = t.gone.replace('%s', gone.join(', '));
+                            alertBox.textContent = current.room.t.gone.replace('%s', gone.join(', '));
                             alertBox.hidden = false;
                         }
                         renderDialog();
@@ -215,8 +215,7 @@
             current = tableIndex[card.dataset.table];
             working = selected(current.table).slice();
             dialog.querySelector('#numbered-dialog-title').textContent = current.room.name + ' · ' + current.table.name;
-            dialog.querySelector('[data-numbered-sub]').textContent =
-                (current.room.pairs ? t.subPairs : t.sub).replace('%s', current.room.price);
+            dialog.querySelector('[data-numbered-sub]').textContent = current.room.t.sub;
             alertBox.hidden = true;
             renderDialog();
             dialog.showModal();

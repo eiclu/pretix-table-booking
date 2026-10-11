@@ -1,0 +1,41 @@
+{% extends "pretixcontrol/event/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block title %}{% trans "Wording in the shop" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Wording in the shop" %}</h1>
+    <p>
+        <a href="{% url "plugins:pretix_tables:overview" organizer=request.organizer.slug event=request.event.slug %}">{% trans "All rooms" %}</a>
+    </p>
+    <p>
+        {% blocktrans trimmed %}
+            Change the texts your customers see. Everything you leave empty keeps its default. A single room can
+            use its own words for seats and tables, you find these fields in the product settings of the room.
+        {% endblocktrans %}
+    </p>
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        <fieldset>
+            <legend>{% trans "Checkout step" %}</legend>
+            {% bootstrap_field form.tables_step_label layout="control" %}
+            {% bootstrap_field form.tables_step_text layout="control" %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans "Words for seats and tables" %}</legend>
+            <p class="help-block">
+                {% blocktrans trimmed %}
+                    These words are placed into sentences such as “94 of 100 seats free”, “per seat” or
+                    “Show tables”. Existing tables keep their names, you can rename them under “Manage tables”.
+                {% endblocktrans %}
+            </p>
+            {% bootstrap_field form.tables_term_space layout="control" %}
+            {% bootstrap_field form.tables_term_spaces layout="control" %}
+            {% bootstrap_field form.tables_term_table layout="control" %}
+            {% bootstrap_field form.tables_term_tables layout="control" %}
+        </fieldset>
+        <div class="form-group submit-group">
+            <button type="submit" class="btn btn-primary btn-save">{% trans "Save" %}</button>
+        </div>
+    </form>
+{% endblock %}

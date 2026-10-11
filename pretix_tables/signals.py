@@ -50,7 +50,7 @@ def control_nav_event(sender, request, **kwargs):
         "label": _("Rooms and tables"),
         "url": reverse("plugins:pretix_tables:overview", kwargs=event_kwargs),
         "parent": reverse("control:event.items", kwargs=event_kwargs),
-        "active": url.namespace == "plugins:pretix_tables" and url.url_name in ("overview", "tables"),
+        "active": url.namespace == "plugins:pretix_tables" and url.url_name in ("overview", "tables", "wording"),
     }]
 
 
@@ -131,6 +131,8 @@ def base_event_copy_data(sender, other, item_map, quota_map, **kwargs):
             continue
         copy = NumberedRoom.objects.create(
             item=item_map[room.item_id], pairs=room.pairs, quota=quota_map.get(room.quota_id), map=room.map.name,
+            term_space=room.term_space, term_spaces=room.term_spaces,
+            term_table=room.term_table, term_tables=room.term_tables,
         )
         NumberedTable.objects.bulk_create([
             NumberedTable(room=copy, name=t.name, size=t.size, position=t.position, blocked=t.blocked)

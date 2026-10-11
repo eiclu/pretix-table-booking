@@ -1,7 +1,7 @@
 [project]
 name = "pretix-tables"
 dynamic = ["version"]
-description = "Sell products and variations as numbered spaces, e.g. seats at a table"
+description = "Sell products and variations as numbered seats, e.g. at a table"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 keywords = ["pretix"]

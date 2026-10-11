@@ -94,7 +94,7 @@ def test_shop_page_lists_rooms(env, client):
     content = client.get("/ball/wb/").content.decode()
     assert 'id="numbered-spaces"' in content
     assert "Great Hall" in content and "Bar" in content
-    assert "36 of 36 spaces free" in content
+    assert "36 of 36 seats free" in content and "3 tables" in content and "per seat" in content
     assert '"s": "ffffffffffff"' in content
     assert "pretix_tables/numbered.js" in content
     # the regular product still shows and brings the shop's own button
@@ -118,7 +118,7 @@ def test_space_can_not_be_booked_twice(env, client):
     mine = client.get("/ball/wb/numbered-spaces/status/").json()["tables"][str(t1.pk)]
     theirs = other.get("/ball/wb/numbered-spaces/status/").json()["tables"][str(t1.pk)]
     assert mine == "ffffmmffffff" and theirs == "ffffhhffffff"
-    assert "34 of 36 spaces free" in other.get("/ball/wb/").content.decode()
+    assert "34 of 36 seats free" in other.get("/ball/wb/").content.decode()
 
 
 def test_pairs_are_enforced(env, client):
@@ -178,7 +178,7 @@ def test_manage_tables(env, admin):
         data.update(changes)
         return admin.post(url, data, follow=True)
 
-    # shrinking below a held space is refused and nothing is saved
+    # shrinking below a held seat is refused and nothing is saved
     r = save(**{f"size_{t1.pk}": "8", f"name_{t2.pk}": "Family table"})
     assert "alert-danger" in r.content.decode()
     with scopes_disabled():
@@ -210,7 +210,7 @@ def test_form_rules_and_disable(env, client):
         tbar.size = 7
         tbar.save()
         assert not room_form(bar, enabled="on", pairs="on").is_valid()
-        # a new room needs tables and spaces
+        # a new room needs tables and seats
         plain = Item.objects.create(event=env["event"], name="Plain", default_price=Decimal("1.00"))
         assert not room_form(plain, enabled="on").is_valid()
         assert not room_form(plain, enabled="on", pairs="on", tables=2, spaces=5).is_valid()
@@ -289,7 +289,7 @@ def test_checkout_step_offers_cross_selling_rooms(env, client):
             t1.guid(3), t1.guid(4)
         ]
 
-    # someone else took the space in the meantime
+    # someone else took the seat in the meantime
     other = Client()
     add(other, {f"item_{env['ticket'].pk}": "1"})
     r = other.post(step, {rhall.field_name: [t1.guid(3), t1.guid(4)]}, follow=True)
@@ -333,8 +333,8 @@ def test_spaces_not_for_sale(env, admin):
 
     buyer = Client()
     content = buyer.get("/ball/wb/").content.decode()
-    assert '"s": "ffxxffffffxx"' in content and "30 of 30 spaces free" in content
-    # the shop refuses a blocked space even if it is requested by hand
+    assert '"s": "ffxxffffffxx"' in content and "30 of 30 seats free" in content
+    # the shop refuses a blocked seat even if it is requested by hand
     add(buyer, {rhall.field_name: [t1.guid(3), t1.guid(4)]})
     with scopes_disabled():
         assert not CartPosition.objects.exists()
@@ -355,3 +355,46 @@ def test_overview_uses_product_order(env, admin):
         env["bar"].save()
     content = admin.get("/control/event/ball/wb/numbered-spaces/").content.decode()
     assert content.index(">Bar<") < content.index(">Great Hall<")
+
+
+def test_custom_wording(env, client, admin):
+    event, rbar, hall = env["event"], env["rbar"], env["hall"]
+    url = "/control/event/ball/wb/numbered-spaces/wording/"
+    assert admin.get(url).status_code == 200
+    r = admin.post(url, {
+        "tables_step_label_0": "Pick your chairs", "tables_step_text_0": "Chairs are optional.",
+        "tables_term_space_0": "chair", "tables_term_spaces_0": "chairs",
+    })
+    assert r.status_code == 302
+    # the bar uses its own words
+    with scopes_disabled():
+        configure(env["bar"], enabled="on", term_space_0="stool", term_spaces_0="stools", term_table_0="bar",
+                  term_tables_0="bars")
+        rbar.refresh_from_db()
+        assert str(rbar.term_space) == "stool"
+
+    content = client.get("/ball/wb/").content.decode()
+    assert "36 of 36 chairs free" in content and "per chair" in content and "Show tables" in content
+    assert "8 of 8 stools free" in content and "per stool" in content and "Show bars" in content
+    assert "1 bar" in content and "Minimum free chairs per table" in content
+    assert "Choose your stools. " in content and "Stool %s" in content
+    assert " seats" not in content
+
+    # new tables are named with the room's word
+    admin.post(f"/control/event/ball/wb/numbered-spaces/{env['bar'].pk}/", {"action": "add", "count": "1", "size": "4"})
+    with scopes_disabled():
+        assert [t.name for t in rbar.tables.all()] == ["Table 1", "Bar 2"]
+
+    with scopes_disabled():
+        cat = ItemCategory.objects.create(event=event, name="Tables", cross_selling_mode="only",
+                                          cross_selling_condition="always")
+        hall.category = cat
+        hall.save()
+    add(client, {f"item_{env['ticket'].pk}": "1"})
+    content = client.get("/ball/wb/checkout/start", follow=True).content.decode()
+    assert "Pick your chairs" in content and "Chairs are optional." in content
+
+    with scopes_disabled():
+        positions = [CartPosition(event=event, item=hall, seat=Seat.objects.get(seat_guid=env["t1"].guid(1)))]
+        with pytest.raises(CartError, match="chairs are only sold in pairs. Please add chair 2"):
+            check_positions(positions, CartError)
