@@ -1,0 +1,37 @@
+[project]
+name = "pretix-tables"
+dynamic = ["version"]
+description = "Sell products and variations as numbered spaces, e.g. seats at a table"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+keywords = ["pretix"]
+authors = [
+    {name = "Luca Eichler"},
+]
+maintainers = [
+    {name = "Luca Eichler"},
+]
+
+dependencies = []
+
+[project.entry-points."pretix.plugin"]
+pretix_tables = "pretix_tables:PretixPluginMeta"
+
+[project.entry-points."distutils.commands"]
+build = "pretix_plugin_build.build:CustomBuild"
+
+[build-system]
+requires = [
+    "setuptools",
+    "pretix-plugin-build",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "pretix_tables.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["pretix*"]
+namespaces = false

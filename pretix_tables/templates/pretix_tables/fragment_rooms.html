@@ -1,0 +1,63 @@
+{% load i18n %}
+{% load l10n %}
+{% load rich_text %}
+<div class="numbered-filter">
+    <label for="numbered-need">{% trans "Show tables with at least" %}</label>
+    <select id="numbered-need" class="form-control input-sm" data-numbered-need>
+        <option value="0">{% trans "any number of free spaces" %}</option>
+        <option value="2">{% trans "2 free spaces" %}</option>
+        <option value="4">{% trans "4 free spaces" %}</option>
+        <option value="6">{% trans "6 free spaces" %}</option>
+        <option value="8">{% trans "8 free spaces" %}</option>
+    </select>
+</div>
+{% for r in rooms %}
+    <details class="numbered-room" data-numbered-room="{{ r.room.pk }}"{% if rooms|length == 1 %} open{% endif %}>
+        <summary class="numbered-room-head">
+            <span class="numbered-room-name">
+                <strong>{{ r.item.name }}</strong>
+                <span class="numbered-meta">
+                    {% blocktrans trimmed count n=r.tables %}
+                        {{ n }} table
+                    {% plural %}
+                        {{ n }} tables
+                    {% endblocktrans %}
+                    {% if r.room.pairs %}· {% trans "sold in pairs" %}{% endif %}
+                    <span data-numbered-shown></span>
+                    ·
+                    <span data-numbered-room-free class="{% if r.free %}text-success{% else %}text-danger{% endif %}">
+                        {% if r.free %}
+                            {% blocktrans trimmed with free=r.free total=r.size %}
+                                {{ free }} of {{ total }} spaces free
+                            {% endblocktrans %}
+                        {% else %}
+                            {% trans "Sold out" %}
+                        {% endif %}
+                    </span>
+                </span>
+            </span>
+            <span class="numbered-room-price price">
+                {{ r.price }}
+                <small class="text-muted">{% trans "per space" %}</small>
+            </span>
+        </summary>
+        <div class="numbered-room-body">
+            {% if r.item.description %}
+                <div class="product-description">{{ r.item.description|localize|rich_text }}</div>
+            {% endif %}
+            <div class="numbered-room-cols">
+                {% if r.room.map %}
+                    <a class="numbered-map" href="{{ r.room.map.url }}" target="_blank" rel="noopener"
+                            title="{% trans "Open the room map in full size" %}">
+                        <img src="{{ r.room.map.url }}" loading="lazy"
+                                alt="{% blocktrans trimmed with room=r.item.name %}Room map of {{ room }}{% endblocktrans %}">
+                    </a>
+                {% endif %}
+                <div class="numbered-list">
+                    <div class="numbered-tables" data-numbered-tables></div>
+                </div>
+            </div>
+        </div>
+    </details>
+{% endfor %}
+<div class="numbered-summary" data-numbered-summary aria-live="polite" hidden></div>

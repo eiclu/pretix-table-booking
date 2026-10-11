@@ -1,0 +1,94 @@
+{% extends "pretixcontrol/event/base.html" %}
+{% load i18n %}
+{% block title %}{{ room }} – {% trans "Tables" %}{% endblock %}
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with room=room %}Tables in {{ room }}{% endblocktrans %}
+    </h1>
+    <p>
+        <a href="{% url "plugins:pretix_tables:overview" organizer=request.organizer.slug event=request.event.slug %}">{% trans "All rooms" %}</a>
+        ·
+        <a href="{% url "control:event.item" organizer=request.organizer.slug event=request.event.slug item=room.item_id %}">{% trans "Room settings (price, pairs, map)" %}</a>
+    </p>
+    <p class="text-muted">
+        {% blocktrans trimmed with tables=stats.tables size=stats.size free=stats.free sold=stats.sold held=stats.held %}
+            {{ tables }} tables, {{ size }} spaces: {{ free }} free, {{ held }} in carts, {{ sold }} sold.
+        {% endblocktrans %}
+        {% if stats.blocked %}{% blocktrans trimmed with n=stats.blocked %}{{ n }} more are not for sale.{% endblocktrans %}{% endif %}
+        {% if room.pairs %}{% trans "Spaces are sold in pairs." %}{% endif %}
+    </p>
+    <p class="text-muted">
+        {% blocktrans trimmed %}
+            Use “Not for sale” for spaces that do not exist at a table or that you give out yourself, for example
+            “3-4, 9”. They keep their number, are shown as not available in the shop and do not count towards
+            the quota. You can still assign them to an order by hand in the backend.
+        {% endblocktrans %}
+    </p>
+
+    <form method="post" class="form-inline" style="margin-bottom: 20px">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add">
+        <label for="add-count">{% trans "Add" %}</label>
+        <input type="number" class="form-control" id="add-count" name="count" value="5" min="1" max="200" style="width: 90px">
+        <label for="add-size">{% trans "tables with" %}</label>
+        <input type="number" class="form-control" id="add-size" name="size" value="{{ rows.0.table.size|default:12 }}" min="1" max="100" style="width: 90px">
+        <span>{% trans "spaces each" %}</span>
+        <button type="submit" class="btn btn-default"><span class="fa fa-plus" aria-hidden="true"></span> {% trans "Add tables" %}</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-condensed table-hover">
+                <thead>
+                <tr>
+                    <th>{% trans "Table name" %}</th>
+                    <th>{% trans "Spaces" %}</th>
+                    <th>{% trans "Not for sale" %}</th>
+                    <th class="text-right">{% trans "Free" %}</th>
+                    <th>{% trans "Occupancy" %}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td><input type="text" class="form-control input-sm" name="name_{{ row.table.pk }}" value="{{ row.table.name }}" maxlength="190" aria-label="{% trans "Table name" %}"></td>
+                        <td><input type="number" class="form-control input-sm" name="size_{{ row.table.pk }}" value="{{ row.table.size }}" min="1" max="100" style="width: 80px" aria-label="{% trans "Spaces" %}"></td>
+                        <td><input type="text" class="form-control input-sm" name="blocked_{{ row.table.pk }}" value="{{ row.table.blocked_display }}" placeholder="{% trans "e.g. 3-4, 9" %}" style="width: 130px" aria-label="{% trans "Not for sale" %}"></td>
+                        <td class="text-right">{{ row.free }}</td>
+                        <td>
+                            {% for s in row.spaces %}
+                                {% if s.position %}
+                                    <a class="label label-default" title="{{ s.position.attendee_name|default:"" }}"
+                                       href="{% url "control:event.order" organizer=request.organizer.slug event=request.event.slug code=s.position.order.code %}">{{ s.n }}: {{ s.position.order.code }}</a>
+                                {% elif s.state == "blocked" %}
+                                    <span class="label label-default" title="{% trans "Not for sale" %}"><s>{{ s.n }}</s></span>
+                                {% elif s.state == "free" %}
+                                    <span class="label label-success" title="{% trans "Free" %}">{{ s.n }}</span>
+                                {% else %}
+                                    <span class="label label-warning" title="{% trans "In a cart or reserved by a voucher" %}">{{ s.n }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="text-right">
+                            <button type="submit" name="delete" value="{{ row.table.pk }}" class="btn btn-danger btn-sm"
+                                    {% if row.taken %}disabled title="{% trans "This table has reservations." %}"{% endif %}
+                                    aria-label="{% blocktrans trimmed with table=row.table.name %}Delete {{ table }}{% endblocktrans %}">
+                                <span class="fa fa-trash" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6" class="text-muted">{% trans "This room has no tables yet." %}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if rows %}
+            <div class="form-group submit-group">
+                <button type="submit" name="action" value="save" class="btn btn-primary btn-save">{% trans "Save" %}</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load i18n %}
+    <dialog id="numbered-dialog" class="modal-card numbered-dialog" aria-labelledby="numbered-dialog-title">
+        <div class="modal-card-inner">
+            <div class="modal-card-content">
+                <h3 id="numbered-dialog-title"></h3>
+                <p class="text-muted" data-numbered-sub></p>
+                <div class="alert alert-danger" data-numbered-alert role="alert" hidden></div>
+                <div class="numbered-grid" data-numbered-grid></div>
+                <ul class="list-inline numbered-legend" aria-hidden="true">
+                    <li><i class="is-free"></i> {% trans "Free" %}</li>
+                    <li><i class="is-sel"></i> {% trans "Selected" %}</li>
+                    <li><i class="is-mine"></i> {% trans "In your cart" %}</li>
+                    <li><i class="is-held"></i> {% trans "Reserved" %}</li>
+                    <li><i class="is-sold"></i> {% trans "Sold or not available" %}</li>
+                </ul>
+                <p class="numbered-sum" data-numbered-sum aria-live="polite"></p>
+                <p class="modal-card-confirm modal-card-confirm-spread">
+                    <button type="button" class="btn btn-default" data-numbered-cancel>{% trans "Cancel" %}</button>
+                    <button type="button" class="btn btn-primary" data-numbered-apply>{% trans "Use this selection" %}</button>
+                </p>
+            </div>
+        </div>
+    </dialog>
+    {{ config|json_script:"numbered-spaces-config" }}

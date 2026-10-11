@@ -1,0 +1,4 @@
+[plugin]
+package = "pretix-tables"
+modules = [ "pretix_tables" ]
+marketplace_name = "tables"

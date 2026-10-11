@@ -1,0 +1,61 @@
+.numbered-spaces .numbered-meta { font-size: 13px; font-weight: normal; display: block; }
+.numbered-spaces .numbered-submit { margin-top: 15px; }
+.numbered-spaces .numbered-hint { margin-top: 10px; text-align: right; }
+
+.numbered-room { border-top: 1px solid #e5e5e5; }
+.numbered-room-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 12px 4px; cursor: pointer; list-style: none; }
+.numbered-room-head:hover { background: rgba(0, 0, 0, .03); }
+.numbered-room-name { flex: 1; min-width: 0; }
+.numbered-room-price { text-align: right; white-space: nowrap; }
+.numbered-room-price small { display: block; }
+.numbered-room-body { padding: 4px 4px 18px; }
+.numbered-room-cols { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.numbered-map { flex: 0 0 260px; max-width: 100%; }
+.numbered-map img { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
+.numbered-list { flex: 1 1 320px; min-width: 0; }
+.numbered-filter { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.numbered-filter label { margin: 0; font-weight: normal; }
+.numbered-filter select { width: auto; display: inline-block; }
+.numbered-tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; }
+.numbered-table { display: flex; flex-direction: column; gap: 2px; min-height: 64px; padding: 8px 10px; text-align: left; border: 1px solid #ccc; border-radius: 4px; background: #fff; color: inherit; }
+.numbered-table:hover:not(:disabled), .numbered-table:focus { border-color: var(--pretix-brand-primary, #7f5a91); }
+.numbered-table span { font-size: 12px; color: #666; }
+.numbered-table .numbered-free { color: #3b7a3b; font-weight: 600; }
+.numbered-table .numbered-full { color: #b23b3b; }
+.numbered-table:disabled { background: #f3f3f3; cursor: not-allowed; }
+.numbered-table.has-selection { border-color: var(--pretix-brand-primary, #7f5a91); border-width: 2px; padding: 7px 9px; }
+.numbered-table .numbered-sel { color: var(--pretix-brand-primary, #7f5a91); font-weight: bold; }
+.numbered-summary { margin-top: 15px; padding: 12px 15px; border: 1px solid var(--pretix-brand-primary, #7f5a91); border-radius: 4px; }
+.numbered-summary-line { display: flex; gap: 10px; align-items: baseline; }
+.numbered-summary-line span:first-child { flex: 1; min-width: 0; }
+.numbered-summary-price { white-space: nowrap; }
+
+.numbered-dialog { width: 600px; max-width: calc(100% - 30px); }
+.numbered-dialog .modal-card-content { width: 100%; }
+.numbered-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; margin: 15px 0; }
+.numbered-grid.is-pairs { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+
+.numbered-space {
+    display: flex; flex-direction: column; align-items: center; min-height: 62px; padding: 8px 4px 6px;
+    border: 2px solid #ccc; border-radius: 6px; background: #fff; color: inherit;
+}
+.numbered-space b { font-size: 20px; line-height: 1.2; white-space: nowrap; }
+.numbered-space span { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.numbered-space.is-free:hover, .numbered-space.is-free:focus { border-color: var(--pretix-brand-primary, #7f5a91); }
+.numbered-space.is-sel { background: var(--pretix-brand-primary, #7f5a91); border-color: var(--pretix-brand-primary, #7f5a91); color: #fff; }
+.numbered-space.is-mine { border-color: var(--pretix-brand-primary, #7f5a91); color: var(--pretix-brand-primary, #7f5a91); cursor: not-allowed; }
+.numbered-space.is-held { border-style: dashed; border-color: #b58900; background: #fdf6e3; color: #7d5800; cursor: not-allowed; }
+.numbered-space.is-sold, .numbered-space.is-blocked { background: #e6e6e6; border-color: #e6e6e6; color: #767676; cursor: not-allowed; }
+.numbered-space.is-sold b { text-decoration: line-through; }
+
+.numbered-legend { font-size: 13px; }
+.numbered-legend i { display: inline-block; width: 14px; height: 14px; margin-right: 3px; vertical-align: -2px; border: 2px solid #ccc; border-radius: 3px; background: #fff; }
+.numbered-legend i.is-sel { background: var(--pretix-brand-primary, #7f5a91); border-color: var(--pretix-brand-primary, #7f5a91); }
+.numbered-legend i.is-mine { border-color: var(--pretix-brand-primary, #7f5a91); }
+.numbered-legend i.is-held { border-style: dashed; border-color: #b58900; background: #fdf6e3; }
+.numbered-legend i.is-sold { background: #e6e6e6; border-color: #e6e6e6; }
+.numbered-sum { font-weight: bold; }
+
+.numbered-room-head::-webkit-details-marker { display: none; }
+.numbered-room-head::before { content: "\25B8"; width: 14px; color: #777; }
+.numbered-room[open] > .numbered-room-head::before { content: "\25BE"; }
