@@ -22,7 +22,7 @@ class NumberedSpacesStep(CartMixin, TemplateFlowStep):
     products that need a seat, so this step sits right after it and follows the same category
     settings ("cross-selling category", "normal + cross-selling category" and their conditions).
     """
-    priority = 41
+    priority = 39
     identifier = STEP_IDENTIFIER
     template_name = "pretix_tables/checkout_step.html"
     icon = "th"
