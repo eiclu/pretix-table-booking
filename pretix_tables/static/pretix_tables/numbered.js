@@ -92,13 +92,17 @@
                 list.appendChild(card);
             });
             if (!shown) list.appendChild(el('p', 'text-muted', room.t.noTables));
+            box.hidden = !!need && !shown;  // with a filter set, rooms without a match are left out
             box.querySelector('[data-numbered-shown]').textContent =
                 need ? '· ' + t.shown.replace('%a', shown).replace('%b', room.tables.length) : '';
             var pill = box.querySelector('[data-numbered-room-free]');
             pill.textContent = roomFree ? room.t.roomFree.replace('%f', roomFree).replace('%t', roomSize) : t.soldOut;
             pill.className = roomFree ? 'text-success' : 'text-danger';
         }
-        function renderRooms() { Object.keys(cfg.rooms).forEach(renderRoom); }
+        function renderRooms() {
+            Object.keys(cfg.rooms).forEach(renderRoom);
+            root.querySelector('[data-numbered-empty]').hidden = !!root.querySelector('[data-numbered-room]:not([hidden])');
+        }
 
         function syncForm() {
             holder.textContent = '';

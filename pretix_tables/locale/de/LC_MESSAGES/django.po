@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pretix-tables 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 10:29+0000\n"
-"PO-Revision-Date: 2026-10-12 10:29+0000\n"
+"POT-Creation-Date: 2026-10-12 11:04+0000\n"
+"PO-Revision-Date: 2026-10-12 11:04+0000\n"
 "Last-Translator: Luca Eichler\n"
 "Language: de\n"
 "Language-Team: German\n"
@@ -239,11 +239,11 @@ msgstr ""
 msgid "Rooms and tables"
 msgstr "Räume und Tische"
 
-#: pretix_tables/templates/pretix_tables/checkout_step.html:15
+#: pretix_tables/templates/pretix_tables/checkout_step.html:16
 msgid "Go back"
 msgstr "Zurück"
 
-#: pretix_tables/templates/pretix_tables/checkout_step.html:20
+#: pretix_tables/templates/pretix_tables/checkout_step.html:21
 msgid "Continue"
 msgstr "Weiter"
 
@@ -468,6 +468,10 @@ msgstr "Raumplan vergrößern"
 #, python-format
 msgid "Room map of %(room)s"
 msgstr "Raumplan von %(room)s"
+
+#: pretix_tables/templates/pretix_tables/fragment_rooms.html:76
+msgid "Nothing matches this filter."
+msgstr "Kein Treffer für diesen Filter."
 
 #: pretix_tables/templates/pretix_tables/shop.html:5
 msgid "We're now trying to reserve this for you!"
