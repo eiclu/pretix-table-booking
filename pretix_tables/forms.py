@@ -2,8 +2,8 @@ from django import forms
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from i18nfield.forms import I18nFormField, I18nTextarea, I18nTextInput
-from pretix.base.forms import SettingsForm
+from i18nfield.forms import I18nFormField, I18nTextInput
+from pretix.base.forms import I18nMarkdownTextarea, SettingsForm
 
 from .models import NumberedRoom, NumberedTable
 from .services import remove_room, sync_room
@@ -32,7 +32,7 @@ class WordingSettingsForm(SettingsForm):
         label=_("Introduction of the checkout step"),
         help_text=_("Shown above the list of rooms. Default: “You can also reserve seats with your order. This is "
                     "optional: make your selection or just continue.”"),
-        widget=I18nTextarea, required=False, widget_kwargs={"attrs": {"rows": 3}},
+        widget=I18nMarkdownTextarea, required=False, widget_kwargs={"attrs": {"rows": 3}},
     )
     tables_term_space = term_field("space", _("For example “place”. Default: “seat”."))
     tables_term_spaces = term_field("spaces", _("For example “places”. Default: “seats”."))

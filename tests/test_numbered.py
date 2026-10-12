@@ -362,7 +362,7 @@ def test_custom_wording(env, client, admin):
     url = "/control/event/ball/wb/numbered-spaces/wording/"
     assert admin.get(url).status_code == 200
     r = admin.post(url, {
-        "tables_step_label_0": "Pick your chairs", "tables_step_text_0": "Chairs are optional.",
+        "tables_step_label_0": "Pick your chairs", "tables_step_text_0": '<span class="fa fa-shopping-cart"></span> Chairs are **optional**.',
         "tables_term_space_0": "chair", "tables_term_spaces_0": "chairs",
     })
     assert r.status_code == 302
@@ -392,7 +392,7 @@ def test_custom_wording(env, client, admin):
         hall.save()
     add(client, {f"item_{env['ticket'].pk}": "1"})
     content = client.get("/ball/wb/checkout/start", follow=True).content.decode()
-    assert "Pick your chairs" in content and "Chairs are optional." in content
+    assert "Pick your chairs" in content and '<span class="fa fa-shopping-cart"></span> Chairs are <strong>optional</strong>.' in content
 
     with scopes_disabled():
         positions = [CartPosition(event=event, item=hall, seat=Seat.objects.get(seat_guid=env["t1"].guid(1)))]
