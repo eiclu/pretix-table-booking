@@ -60,8 +60,8 @@
         <div class="numbered-room-body" id="numbered-room-{{ r.room.pk }}-tables" hidden>
             <div class="numbered-room-cols">
                 {% if r.room.map %}
-                    <a class="numbered-map" href="{{ r.room.map.url }}" target="_blank" rel="noopener"
-                            title="{% trans "Open the room map in full size" %}">
+                    <a class="numbered-map" href="{{ r.room.map.url }}" data-lightbox="numbered-map-{{ r.room.pk }}"
+                            title="{% trans "Enlarge the room map" %}">
                         <img src="{{ r.room.map.url }}" loading="lazy"
                                 alt="{% blocktrans trimmed with room=r.item.name %}Room map of {{ room }}{% endblocktrans %}">
                     </a>

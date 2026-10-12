@@ -4,7 +4,7 @@
 
 .numbered-room-body { padding: 4px 0 18px; }
 .numbered-room-cols { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
-.numbered-map { flex: 0 0 260px; max-width: 100%; }
+.numbered-map { flex: 0 0 260px; max-width: 100%; cursor: zoom-in; }
 .numbered-map img { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
 .numbered-list { flex: 1 1 320px; min-width: 0; }
 .numbered-filter { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pretix-tables 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 17:28+0000\n"
-"PO-Revision-Date: 2026-10-11 17:28+0000\n"
+"POT-Creation-Date: 2026-10-12 10:29+0000\n"
+"PO-Revision-Date: 2026-10-12 10:29+0000\n"
 "Last-Translator: Luca Eichler\n"
 "Language: de\n"
 "Language-Team: German\n"
@@ -461,8 +461,8 @@ msgid "Sold out"
 msgstr "Ausverkauft"
 
 #: pretix_tables/templates/pretix_tables/fragment_rooms.html:64
-msgid "Open the room map in full size"
-msgstr "Raumplan in voller Größe öffnen"
+msgid "Enlarge the room map"
+msgstr "Raumplan vergrößern"
 
 #: pretix_tables/templates/pretix_tables/fragment_rooms.html:66
 #, python-format
